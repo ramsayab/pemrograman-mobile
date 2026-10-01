@@ -1,7 +1,6 @@
 # Pemrograman Mobile
 
-Nama: Ramsay Abelson
-NIM: 20240801042
+Ramsay Abelson - 20240801042
 
 Dosen Pengampu:
 Jefry Sunupurwa Asri, S.Kom., M.Kom.
