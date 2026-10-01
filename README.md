@@ -1,16 +1,28 @@
-# mobile
+# Pemrograman Mobile
 
-A new Flutter project.
+Nama: Ramsay Abelson
+NIM: 20240801042
 
-## Getting Started
+Dosen Pengampu:
+Jefry Sunupurwa Asri, S.Kom., M.Kom.
 
-This project is a starting point for a Flutter application.
+## Deskripsi Proyek
 
-A few resources to get you started if this is your first Flutter project:
+Proyek ini dibuat sebagai bagian dari pembelajaran mata kuliah Pemrograman Mobile menggunakan Flutter. Repository ini berisi latihan, tugas, dan implementasi aplikasi mobile yang dipelajari selama perkuliahan.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Tujuan
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Memahami dasar-dasar pengembangan aplikasi mobile
+- Mempelajari struktur aplikasi Flutter
+- Mengimplementasikan UI dan logika aplikasi
+- Menyelesaikan tugas perkuliahan secara terstruktur
+
+## Teknologi yang Digunakan
+
+- Flutter
+- Dart
+- Android/iOS/Web support
+
+## Catatan
+
+Proyek ini merupakan pembelajaran dan pengembangan aplikasi mobile untuk mendukung proses perkuliahan.
