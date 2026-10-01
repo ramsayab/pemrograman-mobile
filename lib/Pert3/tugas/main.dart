@@ -6,7 +6,6 @@ class Barang {
   int jumlah;
   String kategori;
   bool dibeli;
-
   Barang(this.nama, this.jumlah, this.kategori, {this.dibeli = false});
 }
 
@@ -14,7 +13,6 @@ class BelanjaModel extends ChangeNotifier {
   final List<Barang> _items = [];
 
   List<Barang> get items => List.unmodifiable(_items);
-
   int get belumDibeli => _items.where((b) => !b.dibeli).length;
 
   void tambah(String nama, int jumlah, String kategori) {
@@ -33,8 +31,6 @@ class BelanjaModel extends ChangeNotifier {
   }
 }
 
-const daftarKategori = ['Makanan', 'Minuman', 'Kebersihan', 'Lainnya'];
-
 void main() {
   runApp(
     ChangeNotifierProvider(
@@ -51,7 +47,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Daftar Belanja',
-      debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: Colors.green, useMaterial3: true),
       home: const BelanjaPage(),
     );
@@ -64,7 +59,6 @@ class BelanjaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<BelanjaModel>();
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Belanja (${model.belumDibeli} belum dibeli)'),
@@ -86,7 +80,7 @@ class BelanjaPage extends StatelessWidget {
                       decoration: b.dibeli ? TextDecoration.lineThrough : null,
                     ),
                   ),
-                  subtitle: Text('${b.jumlah} pcs - ${b.kategori}'),
+                  subtitle: Text('${b.jumlah} • ${b.kategori}'),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () => context.read<BelanjaModel>().hapus(i),
@@ -120,6 +114,13 @@ class _TambahBarangPageState extends State<TambahBarangPage> {
   final _jumlah = TextEditingController();
   String? _kategori;
 
+  static const _daftarKategori = [
+    'Makanan',
+    'Minuman',
+    'Kebutuhan Rumah',
+    'Lainnya',
+  ];
+
   @override
   void dispose() {
     _nama.dispose();
@@ -129,7 +130,6 @@ class _TambahBarangPageState extends State<TambahBarangPage> {
 
   void _simpan() {
     if (!_formKey.currentState!.validate()) return;
-
     context.read<BelanjaModel>().tambah(
           _nama.text.trim(),
           int.parse(_jumlah.text.trim()),
@@ -153,9 +153,8 @@ class _TambahBarangPageState extends State<TambahBarangPage> {
                 labelText: 'Nama barang',
                 border: OutlineInputBorder(),
               ),
-              validator: (v) => (v == null || v.trim().isEmpty)
-                  ? 'Nama barang wajib diisi'
-                  : null,
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Nama wajib diisi' : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -166,13 +165,10 @@ class _TambahBarangPageState extends State<TambahBarangPage> {
                 border: OutlineInputBorder(),
               ),
               validator: (v) {
-                if (v == null || v.trim().isEmpty) {
-                  return 'Jumlah wajib diisi';
-                }
-                final angka = int.tryParse(v.trim());
-                if (angka == null || angka <= 0) {
-                  return 'Jumlah harus angka lebih dari 0';
-                }
+                if (v == null || v.trim().isEmpty) return 'Jumlah wajib diisi';
+                final n = int.tryParse(v.trim());
+                if (n == null) return 'Jumlah harus berupa angka';
+                if (n <= 0) return 'Jumlah harus lebih dari 0';
                 return null;
               },
             ),
@@ -182,17 +178,14 @@ class _TambahBarangPageState extends State<TambahBarangPage> {
                 labelText: 'Kategori',
                 border: OutlineInputBorder(),
               ),
-              items: daftarKategori
+              items: _daftarKategori
                   .map((k) => DropdownMenuItem(value: k, child: Text(k)))
                   .toList(),
               onChanged: (v) => setState(() => _kategori = v),
               validator: (v) => v == null ? 'Pilih kategori' : null,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _simpan,
-              child: const Text('Simpan'),
-            ),
+            ElevatedButton(onPressed: _simpan, child: const Text('Simpan')),
           ],
         ),
       ),
