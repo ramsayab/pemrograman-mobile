@@ -94,6 +94,3 @@ di repository ini:
 #### Layar Tablet atau Lebih Lebar
 
 ![Hasil aplikasi pada layar tablet](img/tablet.png)
-
-Kedua tangkapan layar harus menunjukkan hasil layout dengan jelas dan tidak
-mengalami overflow.
