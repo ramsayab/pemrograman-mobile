@@ -19,11 +19,7 @@ class _StatusServerPageState extends State<StatusServerPage> {
     _future = cekServer();
   }
 
-  void _periksaLagi() {
-    setState(() {
-      _future = cekServer();
-    });
-  }
+  void _periksaLagi() => setState(() => _future = cekServer());
 
   @override
   Widget build(BuildContext context) {
@@ -38,35 +34,36 @@ class _StatusServerPageState extends State<StatusServerPage> {
               return const Center(child: CircularProgressIndicator());
             }
 
-            final berhasil = snapshot.hasData;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            final status = snapshot.data;
+            final apiHidup = status?.apiHidup ?? false;
+            final dbHidup = status?.databaseHidup ?? false;
+            return ListView(
               children: [
-                Row(
-                  children: [
-                    Icon(
-                      berhasil ? Icons.check_circle : Icons.error,
-                      color: berhasil ? Colors.green : Colors.red,
-                      size: 40,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      berhasil ? 'Server terhubung' : 'Server tidak terhubung',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ],
+                _BarisStatus(
+                  label: 'API',
+                  hidup: apiHidup,
+                  offlineLabel: snapshot.hasError
+                      ? 'Tidak terhubung'
+                      : 'Mati',
+                ),
+                const SizedBox(height: 12),
+                _BarisStatus(
+                  label: 'Database MySQL',
+                  hidup: dbHidup,
+                  offlineLabel: apiHidup ? 'Mati' : 'Tidak diketahui',
                 ),
                 const SizedBox(height: 16),
                 Text('Alamat API: $apiUrl'),
-                if (berhasil) ...[
-                  const SizedBox(height: 8),
-                  Text('Waktu server: ${snapshot.data!.waktuServer}'),
-                  const SizedBox(height: 8),
-                  Text('Latensi: ${snapshot.data!.latensi.inMilliseconds} ms'),
-                ] else ...[
-                  const SizedBox(height: 8),
-                  Text('${snapshot.error}'),
+                if (status != null) ...[
+                  if (status.waktuServer.isNotEmpty)
+                    Text('Waktu server: ${status.waktuServer}'),
+                  if (status.versiMysql != null)
+                    Text('Versi MySQL: ${status.versiMysql}'),
+                  Text('Latensi: ${status.latensi.inMilliseconds} ms'),
+                  if (status.pesan != null) Text('Pesan: ${status.pesan}'),
                 ],
+                if (snapshot.hasError)
+                  Text('Galat koneksi: ${snapshot.error}'),
                 const SizedBox(height: 24),
                 FilledButton.icon(
                   onPressed: _periksaLagi,
@@ -78,6 +75,33 @@ class _StatusServerPageState extends State<StatusServerPage> {
           },
         ),
       ),
+    );
+  }
+}
+
+class _BarisStatus extends StatelessWidget {
+  const _BarisStatus({
+    required this.label,
+    required this.hidup,
+    required this.offlineLabel,
+  });
+
+  final String label;
+  final bool hidup;
+  final String offlineLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          hidup ? Icons.check_circle : Icons.error,
+          color: hidup ? Colors.green : Colors.red,
+          size: 32,
+        ),
+        const SizedBox(width: 12),
+        Text('$label: ${hidup ? 'Hidup' : offlineLabel}'),
+      ],
     );
   }
 }
